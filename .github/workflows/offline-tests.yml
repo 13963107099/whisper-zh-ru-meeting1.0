@@ -10,20 +10,24 @@ permissions:
 
 jobs:
   unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     defaults:
       run:
         working-directory: whisper-zh-ru-meeting
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
-      - name: Safe publishing check
+      - name: Publishing safety check
         run: python check_publication.py
 
       - name: Third-party attribution check
