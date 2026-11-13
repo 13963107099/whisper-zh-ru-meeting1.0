@@ -1,0 +1,36 @@
+
+name: Offline tests (no models or user audio)
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: whisper-zh-ru-meeting
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Safe publishing check
+        run: python check_publication.py
+
+      - name: Third-party attribution check
+        run: python check_third_party_attributions.py
+
+      - name: Python syntax check
+        run: python -m compileall -q .
+
+      - name: Offline unit tests
+        run: python -m unittest -v test_v335
