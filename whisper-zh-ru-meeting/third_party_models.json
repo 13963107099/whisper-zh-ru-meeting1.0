@@ -1,0 +1,105 @@
+{
+  "as_of": "2026-11-13",
+  "note": "Upstream sources and license labels verified on corresponding official project/model pages. This is attribution metadata, not legal certification. No weights redistributed.",
+  "models": [
+    {
+      "id": "openai-whisper-large-v3-turbo",
+      "name": "Whisper Large-v3 Turbo",
+      "owner": "OpenAI",
+      "purpose": "First-pass Chinese/Russian ASR; upstream model architecture and weights",
+      "license": "MIT",
+      "source": "https://huggingface.co/openai/whisper-large-v3-turbo",
+      "license_url": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "status": "Used externally; pretrained weights not included",
+      "code": "whisper_zh_ru_v3.py / whisper_zh_ru_v33.py (whisper.cpp client)"
+    },
+    {
+      "id": "ggml-whisper-turbo-q5",
+      "name": "GGML Whisper Large-v3 Turbo Q5_0",
+      "owner": "ggerganov / whisper.cpp contributors; original Whisper by OpenAI",
+      "purpose": "Quantized format of Whisper model used by local whisper.cpp runtime",
+      "license": "MIT (as labeled by upstream model repository)",
+      "source": "https://huggingface.co/ggerganov/whisper.cpp/blob/main/ggml-large-v3-turbo-q5_0.bin",
+      "license_url": "https://huggingface.co/ggerganov/whisper.cpp",
+      "status": "External local file; NOT bundled; verify provenance if replacing model",
+      "code": "whisper_zh_ru_v3.py --model default filename"
+    },
+    {
+      "id": "silero-vad",
+      "name": "Silero VAD / ggml-silero-v6.2.0",
+      "owner": "Silero Team; ggml conversion via whisper.cpp contributors",
+      "purpose": "Voice activity detection (speech boundaries)",
+      "license": "MIT",
+      "source": "https://github.com/snakers4/silero-vad",
+      "license_url": "https://github.com/snakers4/silero-vad/blob/master/LICENSE",
+      "status": "External VAD weights and whisper.cpp binary; NOT bundled",
+      "code": "whisper_zh_ru_v3.py --vad-model / --vad-binary"
+    },
+    {
+      "id": "m2m100",
+      "name": "M2M100 418M",
+      "owner": "Meta AI (facebook model publisher); M2M100 authors",
+      "purpose": "Chinese ↔ Russian translation suggestions",
+      "license": "MIT",
+      "source": "https://huggingface.co/facebook/m2m100_418M",
+      "license_url": "https://huggingface.co/facebook/m2m100_418M",
+      "status": "Optional downloaded model; NOT bundled",
+      "code": "meeting_model_worker.py translate; bilingual_support.py"
+    },
+    {
+      "id": "pyannote-segmentation-3",
+      "name": "pyannote Segmentation 3.0",
+      "owner": "pyannote / Séverin Baroudi and contributors (see model card)",
+      "purpose": "Overlapped speech detection, NOT verified speaker identity",
+      "license": "MIT; gated access terms on Hugging Face",
+      "source": "https://huggingface.co/pyannote/segmentation-3.0",
+      "license_url": "https://huggingface.co/pyannote/segmentation-3.0",
+      "status": "Optional gated download; requires accepted terms and read token; NOT bundled",
+      "code": "overlap_only_backend.py"
+    },
+    {
+      "id": "speechbrain-sepformer-whamr",
+      "name": "SepFormer WHAMR! 16k",
+      "owner": "SpeechBrain contributors; pretrained speech separation model",
+      "purpose": "Estimate two speech tracks for candidate overlap intervals",
+      "license": "Apache-2.0",
+      "source": "https://huggingface.co/speechbrain/sepformer-whamr16k",
+      "license_url": "https://huggingface.co/speechbrain/sepformer-whamr16k",
+      "status": "Optional downloaded model; NOT bundled",
+      "code": "meeting_model_worker.py separate"
+    },
+    {
+      "id": "deepfilternet3",
+      "name": "DeepFilterNet3",
+      "owner": "Hendrik Schröter and DeepFilterNet contributors",
+      "purpose": "Optional neural speech enhancement",
+      "license": "MIT OR Apache-2.0 (upstream dual license; confirm specific artifacts before redistribution)",
+      "source": "https://github.com/Rikorose/DeepFilterNet",
+      "license_url": "https://github.com/Rikorose/DeepFilterNet/blob/main/LICENSE",
+      "status": "Optional separately installed model; NOT bundled",
+      "code": "meeting_model_worker.py denoise"
+    },
+    {
+      "id": "speechbrain-ecapa",
+      "name": "ECAPA-TDNN VoxCeleb Speaker Embeddings",
+      "owner": "SpeechBrain contributors",
+      "purpose": "Conditional/legacy reference-based speaker track matching; NOT the default V3.3.5 path",
+      "license": "Apache-2.0",
+      "source": "https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb",
+      "license_url": "https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb",
+      "status": "Only loaded when optional speaker references are explicitly provided; NOT bundled",
+      "code": "meeting_model_worker.py separate if references"
+    },
+    {
+      "id": "pyannote-diarization-3-1",
+      "name": "pyannote Speaker Diarization 3.1",
+      "owner": "pyannote contributors",
+      "purpose": "Legacy full diarization pathway retained in older first-pass implementation; disabled in V3.3.5 recommended path",
+      "license": "MIT; gated access terms on Hugging Face",
+      "source": "https://huggingface.co/pyannote/speaker-diarization-3.1",
+      "license_url": "https://huggingface.co/pyannote/speaker-diarization-3.1",
+      "status": "Legacy/optional; NOT default, NOT bundled",
+      "code": "whisper_zh_ru_v3.py legacy --diarization pyannote option"
+    }
+  ]
+}
