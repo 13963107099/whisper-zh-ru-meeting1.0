@@ -137,4 +137,16 @@ class Tests(unittest.TestCase):
         with patch.dict(os.environ,{privacy_defaults.DOWNLOAD_OPT_IN:'1'}):
             self.assertTrue(privacy_defaults.model_downloads_allowed())
 
+    def test_domain_glossary_prompt_is_optional_local_and_bounded(self):
+        self.assertEqual(core.load_domain_prompt('原提示', ''), '原提示')
+        glossary = self.folder/'meeting_glossary.txt'
+        glossary.write_text('# 已核实词条\nABC-200\nИванов\n张伟\n', encoding='utf-8')
+        prompt = core.load_domain_prompt('公司内部会议', str(glossary))
+        self.assertIn('公司内部会议', prompt)
+        self.assertIn('ABC-200；Иванов；张伟', prompt)
+        self.assertIn('不要据此臆造内容', prompt)
+        glossary.write_text('术语\n'*core.MAX_PROMPT_CHARS, encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, '不能超过'):
+            core.load_domain_prompt('', str(glossary))
+
 if __name__=='__main__':unittest.main(verbosity=2)

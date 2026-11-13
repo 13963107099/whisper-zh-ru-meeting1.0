@@ -80,6 +80,8 @@ checkpoints/
 data/
 private/
 secrets/
+meeting_glossary*.txt
+domain_glossary*.txt
 
 # Whisper / diarization / meeting session outputs
 whisper-ru/

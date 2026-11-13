@@ -46,6 +46,7 @@ configure_local_privacy()
 
 SAMPLE_RATE = 16000
 CHAPTER_SECONDS = 1800
+MAX_PROMPT_CHARS = 1600
 VERSION = "3.0.0"
 SPEECH_PATTERN = re.compile(
     r"Speech segment\s+\d+:\s+start\s*=\s*([0-9.]+),\s*end\s*=\s*([0-9.]+)",
@@ -80,6 +81,36 @@ def fingerprint(path):
     p = Path(path)
     st = p.stat()
     return {"path": str(p.resolve()), "bytes": st.st_size, "mtime_ns": st.st_mtime_ns}
+
+
+def load_domain_prompt(base_prompt, glossary_file):
+    """Append a local, user-verified glossary without changing the default prompt."""
+    if not glossary_file:
+        return base_prompt
+    path = Path(glossary_file).expanduser().resolve()
+    if not path.is_file():
+        raise ValueError(f"找不到领域词表：{path}")
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError("领域词表必须是 UTF-8 文本") from exc
+    if "\0" in raw:
+        raise ValueError("领域词表含 NUL 字符")
+    terms = [
+        line.strip()
+        for line in raw.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    if not terms:
+        raise ValueError("领域词表没有可用词条")
+    addition = (
+        "以下是可能出现的已核实领域词语；仅在发音和上下文支持时采用，"
+        "不要据此臆造内容：" + "；".join(terms)
+    )
+    combined = base_prompt + ("\n" if base_prompt else "") + addition
+    if len(combined) > MAX_PROMPT_CHARS:
+        raise ValueError(f"提示和领域词表合计不能超过 {MAX_PROMPT_CHARS} 个字符")
+    return combined
 
 
 def atomic_json(path, value):
@@ -640,6 +671,11 @@ def build_parser():
     p.add_argument("--overlap", type=float, default=0.45, help="片段两侧上下文重叠，秒")
     p.add_argument("--recheck", choices=["none", "suspicious", "all"], default="suspicious")
     p.add_argument("--prompt", default="", help="人工核实的术语提示；可能带来偏差")
+    p.add_argument(
+        "--glossary-file",
+        default="",
+        help="本地 UTF-8 领域词表；每行一个已核实词条，内容仅发送到 localhost Whisper",
+    )
     p.add_argument("--port", type=int, default=8179, help="localhost 的 Whisper HTTP 服务端口")
     p.add_argument("--limit-seconds", type=float, default=0, help="仅用于小样本测试，例如 90；0 表示全长")
     p.add_argument("--plan-only", action="store_true", help="仅运行 VAD、列出分段，不执行 Whisper")
@@ -668,6 +704,10 @@ def build_parser():
 def main(argv=None):
     p = build_parser()
     args = p.parse_args(argv)
+    try:
+        args.prompt = load_domain_prompt(args.prompt, args.glossary_file)
+    except (OSError, ValueError) as exc:
+        p.error(str(exc))
     if args.threads <= 0 or args.beam_size <= 0:
         p.error("--threads 与 --beam-size 必须大于 0")
     if not 1 <= args.port <= 65535:

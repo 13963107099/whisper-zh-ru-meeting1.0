@@ -75,10 +75,48 @@ python3 meeting_v335.py separate --output-dir "$HOME/whisper-ru/output/meeting_v
 `whisper_zh_ru_v33.py` includes the V3.3 first-pass stage. Supply the paths for **your own** whisper.cpp server, Silero VAD binaries, and model weights, and disable full speaker diarization to create the cache expected by V3.3.5:
 
 ```bash
-python3 whisper_zh_ru_v33.py   "/PATH/TO/your-meeting.mp3"   --phase fast --diarization off   --model "/PATH/TO/ggml-large-v3-turbo-q5_0.bin"   --server-binary "/PATH/TO/whisper-server"   --vad-binary "/PATH/TO/whisper-vad-speech-segments"   --vad-model "/PATH/TO/ggml-silero-v6.2.0.bin"   --output-dir "$HOME/whisper-ru/output/example-run"
+python3 whisper_zh_ru_v33.py "/PATH/TO/your-meeting.mp3" \
+  --phase fast --diarization off \
+  --model "/PATH/TO/ggml-large-v3-turbo-q5_0.bin" \
+  --server-binary "/PATH/TO/whisper-server" \
+  --vad-binary "/PATH/TO/whisper-vad-speech-segments" \
+  --vad-model "/PATH/TO/ggml-silero-v6.2.0.bin" \
+  --output-dir "$HOME/whisper-ru/output/example-run"
 
 python3 meeting_v335.py render --output-dir "$HOME/whisper-ru/output/example-run"
 ```
+
+#### Optional: verified domain glossary for unclear pronunciations
+
+A small, meeting-specific glossary can help Whisper choose verified company names, product IDs, personal names and specialist vocabulary when pronunciation is unclear. It is a hint, not a guarantee: include only terms that are relevant and already verified, because irrelevant terms can bias recognition.
+
+For a short list, use the existing `--prompt` option directly:
+
+```bash
+python3 whisper_zh_ru_v33.py "/PATH/TO/your-meeting.mp3" \
+  --prompt "公司名：XXX；产品：ABC-200；人员：张伟、Иванов；术语：..." \
+  --phase fast --diarization off \
+  --model "/PATH/TO/ggml-large-v3-turbo-q5_0.bin" \
+  --server-binary "/PATH/TO/whisper-server" \
+  --vad-binary "/PATH/TO/whisper-vad-speech-segments" \
+  --vad-model "/PATH/TO/ggml-silero-v6.2.0.bin" \
+  --output-dir "$HOME/whisper-ru/output/example-run"
+```
+
+For confidential terms, prefer a local UTF-8 file with one verified term per line; blank lines and `#` comments are ignored:
+
+```bash
+python3 whisper_zh_ru_v33.py "/PATH/TO/your-meeting.mp3" \
+  --glossary-file "$HOME/whisper-ru/private/meeting_glossary.txt" \
+  --phase fast --diarization off \
+  --model "/PATH/TO/ggml-large-v3-turbo-q5_0.bin" \
+  --server-binary "/PATH/TO/whisper-server" \
+  --vad-binary "/PATH/TO/whisper-vad-speech-segments" \
+  --vad-model "/PATH/TO/ggml-silero-v6.2.0.bin" \
+  --output-dir "$HOME/whisper-ru/output/example-run"
+```
+
+The glossary is read locally and sent only to the localhost Whisper server. The combined prompt is recorded in the ignored local output manifest so cached runs cannot silently reuse a different glossary; protect the output directory as meeting-confidential data. If neither option is supplied, decoding parameters and behavior are unchanged.
 
 This new-audio route is supplied for advanced users; the released tests do not run the full live Whisper server and model pipeline. Validate it locally before calling it a one-command setup.
 
