@@ -21,6 +21,8 @@ venv/
 *.key
 secrets/
 private/
+meeting_glossary*.txt
+domain_glossary*.txt
 
 # Meeting media, transcripts, business documents, databases, and exports
 *.mp3
