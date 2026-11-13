@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — privacy and provenance hardening
+
+- Disabled supported pyannote and Hugging Face telemetry at runtime and made model hubs offline by default; first-time model downloads now require `WHISPER_MEETING_ALLOW_MODEL_DOWNLOADS=1`.
+- Added repository-wide ignore rules and expanded publication checks for meeting media, business documents, model weights, archives, credentials, personal absolute paths, and symlinks.
+- Added a root license, security/contribution entry points, and `PROVENANCE.md` to distinguish original project work from upstream models, tools, algorithms, and third-party contributions.
+- Pinned GitHub Actions to verified release commit SHAs and kept workflow credentials disabled.
+
 ## v0.1.0-alpha — public-source preview (engine V3.3.5)
 
 - Published cache-aware sequential S-label rendering.

@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 from pathlib import Path
 import sys
@@ -11,6 +12,7 @@ import meeting_v335 as a
 import overlap_only_backend as b
 import whisper_zh_ru_v3 as core
 import meeting_audio
+import privacy_defaults
 
 
 class Tests(unittest.TestCase):
@@ -123,5 +125,16 @@ class Tests(unittest.TestCase):
         windows=b.plan(61,20)
         self.assertEqual(len(windows),4)
         self.assertEqual(windows[-1]['end'],61)
+
+    def test_privacy_defaults_disable_telemetry_and_network(self):
+        self.assertEqual(os.environ['DO_NOT_TRACK'],'1')
+        self.assertEqual(os.environ['HF_HUB_DISABLE_TELEMETRY'],'1')
+        self.assertEqual(os.environ['HF_HUB_DISABLE_IMPLICIT_TOKEN'],'1')
+        self.assertEqual(os.environ['HF_HUB_DISABLE_UPDATE_CHECK'],'1')
+        self.assertEqual(os.environ['PYANNOTE_METRICS_ENABLED'],'0')
+        self.assertEqual(os.environ['HF_HUB_OFFLINE'],'1')
+        self.assertEqual(os.environ['TRANSFORMERS_OFFLINE'],'1')
+        with patch.dict(os.environ,{privacy_defaults.DOWNLOAD_OPT_IN:'1'}):
+            self.assertTrue(privacy_defaults.model_downloads_allowed())
 
 if __name__=='__main__':unittest.main(verbosity=2)

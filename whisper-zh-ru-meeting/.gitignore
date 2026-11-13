@@ -27,6 +27,8 @@ venv/
 *.flac
 *.aac
 *.ogg
+*.opus
+*.aiff
 *.wma
 *.mp4
 *.mov
@@ -35,6 +37,26 @@ venv/
 *.vtt
 *.docx
 *.pdf
+*.rtf
+*.odt
+*.xlsx
+*.xls
+*.pptx
+*.pages
+*.keynote
+*.csv
+*.tsv
+*.jsonl
+*.eml
+*.msg
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.jpg
+*.jpeg
+*.png
+*.heic
 
 # Downloaded model weights and runtime artifacts
 *.gguf
@@ -48,9 +70,16 @@ venv/
 *.npy
 *.npz
 *.zip
+*.tar
 *.tar.gz
+*.tgz
+*.7z
+*.rar
 models/
 checkpoints/
+data/
+private/
+secrets/
 
 # Whisper / diarization / meeting session outputs
 whisper-ru/

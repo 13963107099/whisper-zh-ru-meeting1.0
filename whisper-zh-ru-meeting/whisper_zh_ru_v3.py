@@ -38,8 +38,11 @@ import time
 import uuid
 import wave
 
+from privacy_defaults import configure_local_privacy
 import speaker_review as speakers
 import disfluency_cleanup as disfluency
+
+configure_local_privacy()
 
 SAMPLE_RATE = 16000
 CHAPTER_SECONDS = 1800

@@ -16,6 +16,8 @@ import sys
 import time
 import wave
 
+from privacy_defaults import DOWNLOAD_OPT_IN, MODEL_DOWNLOADS_ALLOWED
+
 
 def atomic_json(path, data):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
@@ -159,4 +161,8 @@ if __name__=='__main__':
     except KeyboardInterrupt:
         print('扫描已中断，已完成的窗口不会丢失。',file=sys.stderr);sys.exit(130)
     except Exception as exc:
-        print(f'重叠扫描失败：{type(exc).__name__}: {exc}',file=sys.stderr);sys.exit(2)
+        hint = ''
+        if not MODEL_DOWNLOADS_ALLOWED:
+            hint = (f' 默认离线；若模型尚未缓存，确认访问条款后可临时设置 '
+                    f'{DOWNLOAD_OPT_IN}=1。')
+        print(f'重叠扫描失败：{type(exc).__name__}: {exc}{hint}',file=sys.stderr);sys.exit(2)

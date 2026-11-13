@@ -18,7 +18,7 @@
 | Separation + retranscription | SepFormer **two** candidate tracks; three or more overlapping people may not be recovered |
 | Caching/resume | Reuses previously completed stages; individual failed chunks may rerun |
 
-Models are downloaded separately; no user audio, transcript, Hugging Face token or model weights belong in this repository. The system runs locally, except for initial model downloads and optional external setup operations.
+Models are downloaded separately; no user audio, transcript, Hugging Face token or model weights belong in this repository. Runtime telemetry is disabled and model hubs are offline by default. For an intentional first download only, set `WHISPER_MEETING_ALLOW_MODEL_DOWNLOADS=1`, download/cache the selected model, and then unset it. Model downloads never use meeting audio or transcripts as request inputs.
 
 
 ## Third-party model credits / 第三方模型来源
@@ -88,6 +88,7 @@ This new-audio route is supplied for advanced users; the released tests do not r
 - `whisper_zh_ru_v33.py`, `whisper_zh_ru_v3.py`: first-pass Whisper and cache handling.
 - `overlap_only_backend.py`: overlap detection only; does not identify people.
 - `meeting_model_worker.py`: optional translation and separation worker.
+- `privacy_defaults.py`: disables supported telemetry and makes model hubs offline unless a download is explicitly enabled.
 - `disfluency_cleanup.py`, `transcript_guard.py`: text cleanup with an auditable original.
 - `test_v335.py`: offline unit tests.
 - `docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md`: step-by-step publishing tutorial (Chinese).
@@ -101,6 +102,8 @@ This new-audio route is supplied for advanced users; the released tests do not r
 - The repository **does not redistribute** Whisper, pyannote, M2M100 or SepFormer pretrained weights. Follow each upstream model license and access rules.
 
 See [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md) and the [中文开源发布教程](docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md).
+
+Original project code and upstream boundaries are recorded in [PROVENANCE.md](../PROVENANCE.md). Automated checks reduce accidental disclosure and attribution mistakes, but cannot certify authorship or non-infringement.
 
 ## License
 
