@@ -10,7 +10,7 @@
   -> all_clean.txt / 结构化 JSON（均位于本地 output 目录，不上传 Github）
 ```
 
-S01、S02 表示转写片段顺序，不代表人物。自动重叠区间是候选，不能假定有且仅有两人；SepFormer 只能产生两条估计音轨。完整 pyannote 全局声纹聚类已从 V3.3.5 的主流程移除。服务端可能调用本地 HTTP 接口处理 Whisper，但默认不上传用户录音到 Hugging Face（首次模型下载除外）。
+S01、S02 表示转写片段顺序，不代表人物。自动重叠区间是候选，不能假定有且仅有两人；SepFormer 只能产生两条估计音轨。完整 pyannote 全局声纹聚类已从 V3.3.5 的主流程移除。Whisper 仅调用 `localhost` 服务。Hugging Face 与 pyannote 遥测被强制关闭，模型 Hub 默认离线；只有在运行前明确设置 `WHISPER_MEETING_ALLOW_MODEL_DOWNLOADS=1` 才允许首次下载模型，会议音频和文字不作为下载请求输入。
 
 ## 可移植性与验证缺口
 

@@ -1,6 +1,12 @@
 #!/bin/bash
 # Independent environment: never pip-install into the user's main Python or pyannote venv.
 set -euo pipefail
+export DO_NOT_TRACK=1
+export HF_HUB_DISABLE_TELEMETRY=1
+export HF_HUB_DISABLE_IMPLICIT_TOKEN=1
+export HF_HUB_DISABLE_UPDATE_CHECK=1
+export PYANNOTE_METRICS_ENABLED=0
+export PIP_DISABLE_PIP_VERSION_CHECK=1
 BASE="$HOME/whisper-ru"
 ENV_DIR="${ENHANCEMENT_ENV:-$BASE/enhancement-venv}"
 PYTHON="${ENHANCEMENT_PYTHON:-}"

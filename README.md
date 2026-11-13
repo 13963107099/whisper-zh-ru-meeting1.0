@@ -18,7 +18,7 @@
 | Separation + retranscription | SepFormer **two** candidate tracks; three or more overlapping people may not be recovered |
 | Caching/resume | Reuses previously completed stages; individual failed chunks may rerun |
 
-Models are downloaded separately; no user audio, transcript, Hugging Face token or model weights belong in this repository. The system runs locally, except for initial model downloads and optional external setup operations.
+Models are downloaded separately; no user audio, transcript, Hugging Face token or model weights belong in this repository. Runtime telemetry is disabled and model hubs are offline by default. For an intentional first download only, set `WHISPER_MEETING_ALLOW_MODEL_DOWNLOADS=1`, download/cache the selected model, and then unset it. Model downloads never use meeting audio or transcripts as request inputs.
 
 
 ## Third-party model credits / 第三方模型来源
@@ -34,7 +34,7 @@ Models are downloaded separately; no user audio, transcript, Hugging Face token 
 | Two-track speech separation | [SpeechBrain — SepFormer WHAMR 16k](https://huggingface.co/speechbrain/sepformer-whamr16k) | Apache-2.0 |
 | Optional denoising | [Hendrik Schröter et al. — DeepFilterNet](https://github.com/Rikorose/DeepFilterNet) | MIT OR Apache-2.0 |
 
-**Full model inventory (including retained legacy/conditional models and third-party libraries):** [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) · [Machine-readable inventory](third_party_models.json) · [中文许可核查清单](docs/LICENSE_COMPLIANCE_CHECKLIST_ZH.md). The project MIT `LICENSE` does **not** override any upstream license. Verify code ownership, attribution, and applicable redistribution terms before changing a private repository to public.
+**Full model inventory (including retained legacy/conditional models and third-party libraries):** [THIRD_PARTY_NOTICES.md](whisper-zh-ru-meeting/THIRD_PARTY_NOTICES.md) · [Machine-readable inventory](whisper-zh-ru-meeting/third_party_models.json) · [中文许可核查清单](whisper-zh-ru-meeting/docs/LICENSE_COMPLIANCE_CHECKLIST_ZH.md). The project MIT `LICENSE` does **not** override any upstream license. Verify code ownership, attribution, and applicable redistribution terms before changing a private repository to public.
 
 ## Requirements
 
@@ -42,6 +42,8 @@ Models are downloaded separately; no user audio, transcript, Hugging Face token 
 - Existing whisper.cpp `whisper-server` and Silero VAD binaries, and the GGML Whisper + VAD weights. Set paths via the first-pass CLI flags (see below).
 - Optional dedicated virtual environments for pyannote segmentation and for the translation/separation worker. The latter can be installed with `bash setup_meeting_enhancement.sh`; installation can take time.
 - Hugging Face read token (`HF_TOKEN`) with accepted terms for [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0) for overlap detection. Never hard-code or commit it.
+
+Run the commands below from `whisper-zh-ru-meeting/` unless a command says otherwise.
 
 ### Quick local tests (no model download)
 
@@ -88,6 +90,7 @@ This new-audio route is supplied for advanced users; the released tests do not r
 - `whisper_zh_ru_v33.py`, `whisper_zh_ru_v3.py`: first-pass Whisper and cache handling.
 - `overlap_only_backend.py`: overlap detection only; does not identify people.
 - `meeting_model_worker.py`: optional translation and separation worker.
+- `privacy_defaults.py`: disables supported telemetry and makes model hubs offline unless a download is explicitly enabled.
 - `disfluency_cleanup.py`, `transcript_guard.py`: text cleanup with an auditable original.
 - `test_v335.py`: offline unit tests.
 - `docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md`: step-by-step publishing tutorial (Chinese).
@@ -100,8 +103,10 @@ This new-audio route is supplied for advanced users; the released tests do not r
 - The `S` labels are **not** speaker identities. Audio track 1/2 is local to a particular overlap segment.
 - The repository **does not redistribute** Whisper, pyannote, M2M100 or SepFormer pretrained weights. Follow each upstream model license and access rules.
 
-See [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md) and the [中文开源发布教程](docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md).
+See [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](whisper-zh-ru-meeting/CHANGELOG.md) and the [中文开源发布教程](whisper-zh-ru-meeting/docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md).
+
+Original project code and upstream boundaries are recorded in [PROVENANCE.md](PROVENANCE.md). Automated checks reduce accidental disclosure and attribution mistakes, but cannot certify authorship or non-infringement.
 
 ## License
 
-The original code in this repository is released under the [MIT License](LICENSE), subject to verification of ownership/third-party contributions by the repository publisher. Dependencies and model weights retain their own licenses. Review [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before publishing or redistributing.
+The original code in this repository is released under the [MIT License](LICENSE), subject to verification of ownership/third-party contributions by the repository publisher. Dependencies and model weights retain their own licenses. Review [THIRD_PARTY_NOTICES.md](whisper-zh-ru-meeting/THIRD_PARTY_NOTICES.md) before publishing or redistributing.

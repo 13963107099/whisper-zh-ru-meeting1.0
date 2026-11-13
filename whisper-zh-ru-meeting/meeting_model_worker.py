@@ -2,7 +2,8 @@
 """Optional LOCAL model workers. One model load per batch, never cloud inference.
 
 Run in enhancement-venv (Python 3.11), not the main Python 3.14 environment.
-Official pre-trained model weights are downloaded on first use unless cached.
+Official pre-trained model weights are downloaded only when the project-specific
+download opt-in is set; otherwise cached/local models are required.
 """
 from __future__ import annotations
 import argparse
@@ -11,6 +12,8 @@ import json
 from pathlib import Path
 import sys
 import time
+
+from privacy_defaults import DOWNLOAD_OPT_IN, MODEL_DOWNLOADS_ALLOWED
 
 
 def atomic_json(path: Path, value) -> None:
@@ -47,13 +50,18 @@ def best_assignment(scores, speakers, minimum=.55, margin=.10):
 
 
 def denoise(request):
+    model_location = request.get('model', 'DeepFilterNet3')
+    if not MODEL_DOWNLOADS_ALLOWED and not Path(model_location).expanduser().exists():
+        raise RuntimeError(
+            'DeepFilter 模型不在本地；如确认仅下载公开模型权重，可临时设置 '
+            f'{DOWNLOAD_OPT_IN}=1 后重试。会议音频不会作为下载请求上传。')
     import numpy as np
     import soundfile as sf
     import torch
     import torchaudio.functional as AF
     from df.enhance import init_df, enhance
     torch.set_num_threads(request.get('threads', 4))
-    initialized = init_df(model_base_dir=request.get('model', 'DeepFilterNet3'),
+    initialized = init_df(model_base_dir=model_location,
                           post_filter=False, log_level='WARNING')
     model, state = initialized[0], initialized[1]
     rate = int(state.sr())

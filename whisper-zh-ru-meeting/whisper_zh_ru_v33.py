@@ -337,6 +337,10 @@ def check_manifest(directory,name,value):
 
 def main(argv=None):
     p=parser(); args=p.parse_args(argv)
+    try:
+        args.prompt = core.load_domain_prompt(args.prompt, args.glossary_file)
+    except (OSError, ValueError) as exc:
+        p.error(str(exc))
     if min(args.threads,args.speaker_threads,args.enhancement_threads,args.beam_size,args.draft_every)<=0:
         p.error('线程数、beam-size、draft-every 必须为正数')
     if not 4<=args.max_core<=27 or not 0<=args.overlap<=1 or not 1<=args.port<=65535:
