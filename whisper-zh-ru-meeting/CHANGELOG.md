@@ -2,6 +2,8 @@
 
 ## Unreleased — privacy and provenance hardening
 
+- Updated the copyright holder to WANG Tianwei and moved pinned optional ML dependencies into Dependabot-readable requirements files.
+- Added weekly Dependabot checks for Python dependencies and immutable GitHub Actions references; updates still require review and passing tests.
 - Added an optional local domain glossary (`--glossary-file`) and documented `--prompt`; defaults and decoding parameters are unchanged when neither is supplied.
 - Disabled supported pyannote and Hugging Face telemetry at runtime and made model hubs offline by default; first-time model downloads now require `WHISPER_MEETING_ALLOW_MODEL_DOWNLOADS=1`.
 - Added repository-wide ignore rules and expanded publication checks for meeting media, business documents, model weights, archives, credentials, personal absolute paths, and symlinks.
