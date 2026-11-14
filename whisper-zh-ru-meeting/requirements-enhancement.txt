@@ -2,7 +2,7 @@
 # Intel macOS remains on the last tested Torch baseline; other platforms use 2.5.1.
 numpy==1.26.4
 sentencepiece==0.2.2
-speechbrain==1.0.3
+speechbrain==1.1.2
 transformers==4.46.3
 huggingface-hub==0.27.1
 soundfile==0.12.1
