@@ -149,4 +149,14 @@ class Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '不能超过'):
             core.load_domain_prompt('', str(glossary))
 
+    def test_maintenance_dependency_manifests_are_pinned_and_wired(self):
+        project = Path(__file__).parent
+        setup = (project/'setup_meeting_enhancement.sh').read_text(encoding='utf-8')
+        for filename in ('requirements-enhancement.txt', 'requirements-deepfilter.txt'):
+            self.assertIn(filename, setup)
+            lines = [line.strip() for line in (project/filename).read_text(encoding='utf-8').splitlines()
+                     if line.strip() and not line.lstrip().startswith('#')]
+            self.assertTrue(lines)
+            self.assertTrue(all('==' in line for line in lines))
+
 if __name__=='__main__':unittest.main(verbosity=2)

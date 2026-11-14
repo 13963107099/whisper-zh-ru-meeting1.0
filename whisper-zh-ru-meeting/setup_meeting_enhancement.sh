@@ -8,6 +8,7 @@ export HF_HUB_DISABLE_UPDATE_CHECK=1
 export PYANNOTE_METRICS_ENABLED=0
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 BASE="$HOME/whisper-ru"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_DIR="${ENHANCEMENT_ENV:-$BASE/enhancement-venv}"
 PYTHON="${ENHANCEMENT_PYTHON:-}"
 if [ -z "$PYTHON" ]; then
@@ -33,19 +34,10 @@ PIP="$ENV_DIR/bin/python"
 # Avoid sentencepiece C++ compilation on Intel Mac: use a compatible pre-built wheel.
 "$PIP" -m pip install --only-binary=:all: 'sentencepiece==0.2.2'
 # Fixed compatibility baseline, not an assertion that these are the newest packages.
-if [ "$(uname -s)" = Darwin ] && [ "$(uname -m)" = x86_64 ]; then
-  TORCH='2.2.2'
-else
-  TORCH='2.5.1'
-fi
-"$PIP" -m pip install \
-  'numpy==1.26.4' "torch==$TORCH" "torchaudio==$TORCH" \
-  'speechbrain==1.0.3' 'transformers==4.46.3' 'huggingface-hub==0.27.1' \
-  'soundfile==0.12.1' 'sacremoses==0.1.1'
+"$PIP" -m pip install -r "$SCRIPT_DIR/requirements-enhancement.txt"
 if [ "${INSTALL_DEEPFILTER:-0}" = 1 ]; then
   # Separate switch: some architectures may need Rust/build dependencies for libdf.
-  "$PIP" -m pip install 'deepfilternet==0.5.6' 'numpy==1.26.4' \
-    "torch==$TORCH" "torchaudio==$TORCH" 'huggingface-hub==0.27.1'
+  "$PIP" -m pip install -r "$SCRIPT_DIR/requirements-deepfilter.txt"
 fi
 "$PIP" -m pip check
 "$PIP" -c 'import torch, torchaudio, soundfile, speechbrain; from transformers import M2M100Tokenizer, M2M100ForConditionalGeneration; print("增强环境导入检查通过，torch", torch.__version__)'

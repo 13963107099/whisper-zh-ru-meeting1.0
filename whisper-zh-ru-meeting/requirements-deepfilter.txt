@@ -1,0 +1,2 @@
+# Optional neural-denoising dependency. Install only with INSTALL_DEEPFILTER=1.
+deepfilternet==0.5.6

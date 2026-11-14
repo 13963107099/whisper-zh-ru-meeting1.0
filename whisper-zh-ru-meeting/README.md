@@ -127,6 +127,7 @@ This new-audio route is supplied for advanced users; the released tests do not r
 - `overlap_only_backend.py`: overlap detection only; does not identify people.
 - `meeting_model_worker.py`: optional translation and separation worker.
 - `privacy_defaults.py`: disables supported telemetry and makes model hubs offline unless a download is explicitly enabled.
+- `requirements-enhancement.txt`, `requirements-deepfilter.txt`: pinned optional ML dependencies monitored by Dependabot.
 - `disfluency_cleanup.py`, `transcript_guard.py`: text cleanup with an auditable original.
 - `test_v335.py`: offline unit tests.
 - `docs/GITHUB_OPEN_SOURCE_GUIDE_ZH.md`: step-by-step publishing tutorial (Chinese).
